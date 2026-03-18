@@ -1,0 +1,27 @@
+# Build artifacts
+minicloud
+*.exe
+dist/
+
+# Data / runtime
+data/
+*.db
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+*.swp
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Docs
+*.md
+LICENSE

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+echo "LAN: $(ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null || echo 'unknown')"
+echo "WAN: $(curl -s ifconfig.me)"

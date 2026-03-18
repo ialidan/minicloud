@@ -1,0 +1,22 @@
+# Build artifacts
+minicloud
+*.exe
+dist/
+
+# Data / runtime
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# Dependencies
+web/frontend/node_modules/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+*.swp
+
+# Temp
+*.tmp

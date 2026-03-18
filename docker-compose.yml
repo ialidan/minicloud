@@ -1,0 +1,29 @@
+services:
+  minicloud:
+    build:
+      context: .
+      args:
+        VERSION: "${VERSION:-dev}"
+    image: minicloud:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - minicloud-data:/data
+    environment:
+      - MINICLOUD_HOST=0.0.0.0
+      - MINICLOUD_PORT=8080
+      - MINICLOUD_DATA_DIR=/data
+      - MINICLOUD_LOG_LEVEL=info
+      - MINICLOUD_LOG_FORMAT=json
+      # Set to "true" when behind an HTTPS reverse proxy.
+      # - MINICLOUD_SECURE_COOKIES=true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  minicloud-data:

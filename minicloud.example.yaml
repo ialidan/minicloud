@@ -1,0 +1,30 @@
+# MiniCloud configuration
+# Copy to minicloud.yaml and adjust as needed.
+# All values shown are defaults.
+# Environment variables (MINICLOUD_*) take precedence over this file.
+
+server:
+  host: "0.0.0.0"
+  port: 8080
+  read_timeout: "30s"
+  write_timeout: "60s"
+  idle_timeout: "120s"
+  read_header_timeout: "10s"
+  max_upload_size: 104857600  # 100 MiB
+
+  # Optional native TLS. Most deployments should use a reverse proxy instead.
+  tls:
+    enabled: false
+    cert_file: ""
+    key_file: ""
+
+storage:
+  data_dir: "./data"
+
+database:
+  # Defaults to <data_dir>/minicloud.db if empty.
+  path: ""
+
+log:
+  level: "info"     # debug | info | warn | error
+  format: "json"    # json | text

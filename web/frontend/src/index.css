@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+/* ---- Dark mode via .dark class ---- */
+@custom-variant dark (&:is(.dark *));
+
+/* ---- Design tokens ---- */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border-color);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-fg);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-fg);
+  --color-primary-hover: var(--primary-hover);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-fg);
+  --color-danger-hover: var(--danger-hover);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ---- Light theme (default) ---- */
+:root {
+  --background: #fafafa;
+  --foreground: #09090b;
+  --surface: #ffffff;
+  --surface-hover: #f4f4f5;
+  --border-color: #e4e4e7;
+  --muted: #f4f4f5;
+  --muted-fg: #71717a;
+  --primary: #2563eb;
+  --primary-fg: #ffffff;
+  --primary-hover: #1d4ed8;
+  --danger: #dc2626;
+  --danger-fg: #ffffff;
+  --danger-hover: #b91c1c;
+  --ring: #2563eb;
+  --radius: 0.75rem;
+}
+
+/* ---- Dark theme ---- */
+.dark {
+  --background: #09090b;
+  --foreground: #fafafa;
+  --surface: #18181b;
+  --surface-hover: #27272a;
+  --border-color: #27272a;
+  --muted: #27272a;
+  --muted-fg: #a1a1aa;
+  --primary: #3b82f6;
+  --primary-fg: #ffffff;
+  --primary-hover: #2563eb;
+  --danger: #ef4444;
+  --danger-fg: #ffffff;
+  --danger-hover: #dc2626;
+  --ring: #3b82f6;
+}
+
+/* ---- Base ---- */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---- Animations ---- */
+@keyframes animate-in {
+  from {
+    opacity: 0;
+    transform: var(--tw-enter-translate, ) var(--tw-enter-scale, );
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.animate-in {
+  animation: animate-in 0.2s ease-out;
+}
+
+.slide-in-from-right {
+  --tw-enter-translate: translateX(100%);
+}
+
+.zoom-in-95 {
+  --tw-enter-scale: scale(0.95);
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .animate-in {
+    animation: none;
+  }
+
+  .animate-spin {
+    animation: none;
+  }
+
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
