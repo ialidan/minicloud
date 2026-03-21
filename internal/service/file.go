@@ -161,7 +161,7 @@ var categoryPrefixes = map[string][]string{
 func (s *FileService) ListByCategory(ctx context.Context, ownerID, category, virtualPath string, page *repo.Pagination) ([]domain.File, error) {
 	prefixes, ok := categoryPrefixes[category]
 	if !ok {
-		return nil, fmt.Errorf("unknown category %q", category)
+		return nil, fmt.Errorf("category %q: %w", category, domain.ErrUnknownCategory)
 	}
 
 	// When a path is specified, push the filter into SQL for efficiency.
@@ -185,8 +185,8 @@ func (s *FileService) Search(ctx context.Context, ownerID, query string, page *r
 }
 
 // FindDuplicates returns files whose content (checksum) appears more than once.
-func (s *FileService) FindDuplicates(ctx context.Context, ownerID string) ([]domain.File, error) {
-	return s.files.FindDuplicates(ctx, ownerID)
+func (s *FileService) FindDuplicates(ctx context.Context, ownerID string, page *repo.Pagination) ([]domain.File, error) {
+	return s.files.FindDuplicates(ctx, ownerID, page)
 }
 
 // CreateDirectory creates a named subdirectory under the given parent path.
@@ -323,7 +323,11 @@ func (s *FileService) extractMetadata(storageName, mimeType string) *domain.Medi
 		return nil
 	}
 	defer f.Close()
-	return media.ExtractMetadata(f, mimeType)
+	meta := media.ExtractMetadata(f, mimeType)
+	if meta == nil && media.IsExifCapable(mimeType) {
+		s.logger.Debug("no EXIF metadata found in image", "storage_name", storageName, "mime_type", mimeType)
+	}
+	return meta
 }
 
 // ---------------------------------------------------------------------------

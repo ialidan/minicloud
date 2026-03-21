@@ -3,10 +3,11 @@ import { Upload } from "lucide-react";
 
 interface UploadZoneProps {
   onFileDrop: (file: File) => void;
+  multiple?: boolean;
   children: ReactNode;
 }
 
-export function UploadZone({ onFileDrop, children }: UploadZoneProps) {
+export function UploadZone({ onFileDrop, multiple, children }: UploadZoneProps) {
   const [dragOver, setDragOver] = useState(false);
   const dragCounter = useRef(0);
 
@@ -35,9 +36,13 @@ export function UploadZone({ onFileDrop, children }: UploadZoneProps) {
     dragCounter.current = 0;
     setDragOver(false);
 
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      onFileDrop(file);
+    const files = e.dataTransfer.files;
+    if (multiple) {
+      for (let i = 0; i < files.length; i++) {
+        onFileDrop(files[i]!);
+      }
+    } else if (files[0]) {
+      onFileDrop(files[0]);
     }
   }
 
@@ -54,7 +59,7 @@ export function UploadZone({ onFileDrop, children }: UploadZoneProps) {
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary bg-primary/5 backdrop-blur-sm">
           <Upload className="h-8 w-8 text-primary" />
           <p className="mt-2 text-sm font-medium text-primary">
-            Drop file to upload
+            {multiple ? "Drop files to upload" : "Drop file to upload"}
           </p>
         </div>
       )}

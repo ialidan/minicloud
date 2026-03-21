@@ -5,6 +5,7 @@ import { AdminUsersPage } from "@/pages/admin-users";
 import { AppLayout } from "@/components/layout/app-layout";
 import { ProtectedRoute } from "@/components/layout/protected-route";
 import { AdminRoute } from "@/components/layout/admin-route";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 export function App() {
   return (
@@ -12,10 +13,10 @@ export function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
-          <Route path="/files" element={<FilesPage />} />
-          <Route path="/files/*" element={<FilesPage />} />
+          <Route path="/files" element={<ErrorBoundary><FilesPage /></ErrorBoundary>} />
+          <Route path="/files/*" element={<ErrorBoundary><FilesPage /></ErrorBoundary>} />
           <Route element={<AdminRoute />}>
-            <Route path="/admin/users" element={<AdminUsersPage />} />
+            <Route path="/admin/users" element={<ErrorBoundary><AdminUsersPage /></ErrorBoundary>} />
           </Route>
         </Route>
       </Route>

@@ -136,6 +136,12 @@ func (s *AuthService) Login(ctx context.Context, username, password string) (*do
 		return nil, nil, domain.ErrUnauthorized
 	}
 
+	// Enforce single active session per user. Old sessions are invalidated
+	// when a new login occurs, preventing session accumulation.
+	if err := s.sessions.DeleteByUserID(ctx, user.ID); err != nil {
+		return nil, nil, fmt.Errorf("clearing old sessions: %w", err)
+	}
+
 	now := time.Now().UTC()
 	session := &domain.Session{
 		ID:        domain.NewID(),

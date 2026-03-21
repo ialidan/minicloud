@@ -55,7 +55,7 @@ export function FileGrid({
                     e.stopPropagation();
                     onDeleteDir(dir);
                   }}
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-danger/10 text-muted-foreground hover:text-danger cursor-pointer"
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 opacity-0 md:group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-danger/10 text-muted-foreground hover:text-danger cursor-pointer"
                   title="Delete folder"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
@@ -105,7 +105,7 @@ export function FileGrid({
               </p>
             )}
           </div>
-          <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute top-1 right-1 opacity-0 md:group-hover:opacity-100 transition-opacity">
             <FileRowActions
               file={file}
               onDelete={onDeleteFile}

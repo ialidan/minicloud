@@ -23,6 +23,8 @@ func parseTime(s string) time.Time {
 }
 
 // isUniqueViolation checks whether an error is a SQLite UNIQUE constraint failure.
+// This relies on the error message format from modernc.org/sqlite. If the driver
+// is ever swapped (e.g. to mattn/go-sqlite3), verify the error string is the same.
 func isUniqueViolation(err error) bool {
 	return strings.Contains(err.Error(), "UNIQUE constraint failed")
 }

@@ -66,28 +66,35 @@ func New(cfg *config.Config, logger *slog.Logger, authSvc *service.AuthService, 
 		r.Group(func(r chi.Router) {
 			r.Use(middleware.RequireAuth(authSvc))
 
-			r.Post("/auth/logout", authHandler.Logout)
-			r.Get("/auth/me", authHandler.Me)
-
-			// File operations.
+			// Upload route — no timeout (uploads can be large and slow).
 			r.Post("/files", fileHandler.Upload)
-			r.Get("/files", fileHandler.List)
-			r.Get("/files/duplicates", fileHandler.ListDuplicates)
-			r.Get("/files/{id}", fileHandler.Download)
-			r.Put("/files/{id}/move", fileHandler.MoveFile)
-			r.Delete("/files/{id}", fileHandler.Delete)
 
-			// Directory operations.
-			r.Get("/directories", fileHandler.ListAllDirectories)
-			r.Post("/directories", fileHandler.CreateDirectory)
-			r.Delete("/directories/{id}", fileHandler.DeleteDirectory)
+			// All other authenticated routes get a 30-second timeout.
+			r.Group(func(r chi.Router) {
+				r.Use(middleware.Timeout(30 * time.Second))
 
-			// Admin-only user management.
-			r.Route("/admin/users", func(r chi.Router) {
-				r.Use(middleware.RequireAdmin)
-				r.Get("/", userHandler.List)
-				r.Post("/", userHandler.Create)
-				r.Patch("/{id}", userHandler.Update)
+				r.Post("/auth/logout", authHandler.Logout)
+				r.Get("/auth/me", authHandler.Me)
+
+				// File operations.
+				r.Get("/files", fileHandler.List)
+				r.Get("/files/duplicates", fileHandler.ListDuplicates)
+				r.Get("/files/{id}", fileHandler.Download)
+				r.Put("/files/{id}/move", fileHandler.MoveFile)
+				r.Delete("/files/{id}", fileHandler.Delete)
+
+				// Directory operations.
+				r.Get("/directories", fileHandler.ListAllDirectories)
+				r.Post("/directories", fileHandler.CreateDirectory)
+				r.Delete("/directories/{id}", fileHandler.DeleteDirectory)
+
+				// Admin-only user management.
+				r.Route("/admin/users", func(r chi.Router) {
+					r.Use(middleware.RequireAdmin)
+					r.Get("/", userHandler.List)
+					r.Post("/", userHandler.Create)
+					r.Patch("/{id}", userHandler.Update)
+				})
 			})
 		})
 	})

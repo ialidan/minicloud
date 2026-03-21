@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo, memo } from "react";
 import type { FileItem } from "@/lib/types";
 import { groupFilesByMonth, isImageMime, isVideoMime } from "@/lib/format";
 import { fileUrl } from "@/lib/api";
@@ -18,7 +18,7 @@ export function MediaTimeline({
   onMoveFile,
   onPreviewFile,
 }: MediaTimelineProps) {
-  const groups = groupFilesByMonth(files);
+  const groups = useMemo(() => groupFilesByMonth(files), [files]);
 
   return (
     <div className="space-y-8">
@@ -52,7 +52,7 @@ export function MediaTimeline({
 // Individual tile
 // ---------------------------------------------------------------------------
 
-function MediaTile({
+const MediaTile = memo(function MediaTile({
   file,
   onPreview,
   onDelete,
@@ -99,12 +99,12 @@ function MediaTile({
       {isVideo && <VideoDurationBadge file={file} />}
 
       {/* Hover overlay with actions */}
-      <div className="absolute top-0.5 right-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute top-0.5 right-0.5 opacity-0 md:group-hover:opacity-100 transition-opacity">
         <FileRowActions file={file} onDelete={onDelete} onMove={onMove} />
       </div>
     </div>
   );
-}
+});
 
 // ---------------------------------------------------------------------------
 // Video thumbnail + duration

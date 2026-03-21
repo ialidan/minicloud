@@ -12,6 +12,9 @@ interface FileIconProps {
   size?: "sm" | "md" | "lg";
 }
 
+// File-type colors use Tailwind palette values intentionally rather than design
+// tokens. Each color maps to a specific MIME category and does not need to
+// follow the theme's primary/danger/etc. semantic palette.
 export function FileIcon({ mimeType, size = "sm" }: FileIconProps) {
   const sizeClass = SIZE_CLASSES[size];
 

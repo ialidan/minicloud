@@ -29,7 +29,7 @@ type fileService interface {
 	ListContents(ctx context.Context, ownerID, virtualPath string) (*service.DirectoryContents, error)
 	ListByCategory(ctx context.Context, ownerID, category, virtualPath string, page *repo.Pagination) ([]domain.File, error)
 	Search(ctx context.Context, ownerID, query string, page *repo.Pagination) ([]domain.File, error)
-	FindDuplicates(ctx context.Context, ownerID string) ([]domain.File, error)
+	FindDuplicates(ctx context.Context, ownerID string, page *repo.Pagination) ([]domain.File, error)
 	MoveFile(ctx context.Context, fileID, destination string, requestor *domain.User) (*domain.File, error)
 	Delete(ctx context.Context, fileID string, requestor *domain.User) error
 	ListAllDirectories(ctx context.Context, ownerID string) ([]domain.Directory, error)
@@ -120,8 +120,9 @@ func (h *FileHandler) Upload(w http.ResponseWriter, r *http.Request) {
 //	GET /api/v1/files/duplicates
 func (h *FileHandler) ListDuplicates(w http.ResponseWriter, r *http.Request) {
 	user := middleware.UserFromContext(r.Context())
+	page := parsePagination(r, 100, 500)
 
-	files, err := h.fileSvc.FindDuplicates(r.Context(), user.ID)
+	files, err := h.fileSvc.FindDuplicates(r.Context(), user.ID, page)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, "could not find duplicates")
 		return
@@ -188,7 +189,7 @@ func (h *FileHandler) List(w http.ResponseWriter, r *http.Request) {
 		virtualPath := r.URL.Query().Get("path")
 		files, err := h.fileSvc.ListByCategory(r.Context(), user.ID, category, virtualPath, page)
 		if err != nil {
-			if strings.Contains(err.Error(), "unknown category") {
+			if errors.Is(err, domain.ErrUnknownCategory) {
 				respondError(w, http.StatusBadRequest, err.Error())
 				return
 			}

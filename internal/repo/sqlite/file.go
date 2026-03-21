@@ -270,17 +270,21 @@ func (r *FileRepo) SearchByOwner(ctx context.Context, ownerID string, query stri
 
 // FindDuplicates returns all files whose checksum appears more than once
 // for the given owner. Files are ordered by checksum so callers can group them.
-func (r *FileRepo) FindDuplicates(ctx context.Context, ownerID string) ([]domain.File, error) {
-	rows, err := r.db.QueryContext(ctx,
-		`SELECT `+fileColumns+`
+func (r *FileRepo) FindDuplicates(ctx context.Context, ownerID string, page *repo.Pagination) ([]domain.File, error) {
+	query := `SELECT ` + fileColumns + `
 		 FROM files
 		 WHERE owner_id = ? AND checksum IN (
 		   SELECT checksum FROM files WHERE owner_id = ?
 		   GROUP BY checksum HAVING COUNT(*) > 1
 		 )
-		 ORDER BY checksum, original_name`,
-		ownerID, ownerID,
-	)
+		 ORDER BY checksum, original_name`
+	args := []any{ownerID, ownerID}
+
+	pagSQL, pagArgs := paginationClause(page)
+	query += pagSQL
+	args = append(args, pagArgs...)
+
+	rows, err := r.db.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, fmt.Errorf("finding duplicates: %w", err)
 	}

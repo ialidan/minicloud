@@ -20,4 +20,7 @@ var (
 
 	// ErrFileTooLarge indicates the uploaded file exceeds the maximum allowed size.
 	ErrFileTooLarge = errors.New("file too large")
+
+	// ErrUnknownCategory indicates the requested browse category is not recognized.
+	ErrUnknownCategory = errors.New("unknown category")
 )

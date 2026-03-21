@@ -33,7 +33,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             error && "border-danger focus-visible:ring-danger",
             className,
           )}
-          aria-invalid={error ? true : undefined}
+          aria-invalid={!!error}
           aria-describedby={
             error && inputId ? `${inputId}-error` : undefined
           }

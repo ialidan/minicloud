@@ -34,7 +34,7 @@ type FileRepo interface {
 	ListByOwnerAndMimePrefixes(ctx context.Context, ownerID string, prefixes []string, page *Pagination) ([]domain.File, error)
 	ListByOwnerAndMimePrefixesInPath(ctx context.Context, ownerID string, prefixes []string, virtualPath string, page *Pagination) ([]domain.File, error)
 	SearchByOwner(ctx context.Context, ownerID string, query string, page *Pagination) ([]domain.File, error)
-	FindDuplicates(ctx context.Context, ownerID string) ([]domain.File, error)
+	FindDuplicates(ctx context.Context, ownerID string, page *Pagination) ([]domain.File, error)
 	UpdateVirtualPath(ctx context.Context, id string, newPath string) error
 	Delete(ctx context.Context, id string) error
 }

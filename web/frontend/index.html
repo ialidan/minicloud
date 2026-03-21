@@ -3,17 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3b82f6" />
     <title>MiniCloud</title>
     <script>
-      // Prevent flash of wrong theme
+      // Prevent flash of wrong theme and set background early to avoid
+      // white overscroll on mobile.
       (function () {
         var t = localStorage.getItem("minicloud-theme");
-        if (
+        var dark =
           t === "dark" ||
-          (!t && matchMedia("(prefers-color-scheme:dark)").matches)
-        ) {
+          (!t && matchMedia("(prefers-color-scheme:dark)").matches);
+        if (dark) {
           document.documentElement.classList.add("dark");
+          document.documentElement.style.backgroundColor = "#09090b";
+        } else {
+          document.documentElement.style.backgroundColor = "#fafafa";
         }
       })();
     </script>

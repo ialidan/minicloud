@@ -2,11 +2,14 @@ import { useState, useRef, useEffect } from "react";
 import { LogOut } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
+import { useFocusTrap } from "@/lib/hooks/use-focus-trap";
 
 export function UserMenu() {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dropdownRef, open);
 
   useEffect(() => {
     if (!open) return;
@@ -55,6 +58,7 @@ export function UserMenu() {
 
       {open && (
         <div
+          ref={dropdownRef}
           role="menu"
           className="absolute right-0 top-full mt-1 w-48 rounded-lg border border-border bg-surface p-1 shadow-lg"
         >

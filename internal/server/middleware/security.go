@@ -18,10 +18,11 @@ func SecureHeaders(next http.Handler) http.Handler {
 		h.Set("Referrer-Policy", "strict-origin-when-cross-origin")
 		h.Set("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
 
-		// Content-Security-Policy — 'unsafe-inline' for styles is needed for
+		// Content-Security-Policy — 'unsafe-inline' for scripts covers the
+		// inline theme-init snippet in index.html; for styles it covers
 		// Tailwind; blob: and data: for image/video previews.
 		h.Set("Content-Security-Policy",
-			"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; "+
+			"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; "+
 				"img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self'")
 
 		// HSTS — only when the connection is (or was) over TLS.

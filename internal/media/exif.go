@@ -20,7 +20,7 @@ import (
 // ExtractMetadata reads EXIF data from r if the MIME type is an image.
 // Returns nil (not an error) when the file has no extractable metadata.
 func ExtractMetadata(r io.Reader, mimeType string) *domain.MediaMeta {
-	if !isExifCapable(mimeType) {
+	if !IsExifCapable(mimeType) {
 		return nil
 	}
 
@@ -75,8 +75,8 @@ func ParseTakenAtMonth(t time.Time) string {
 	return t.Format("January 2006")
 }
 
-// isExifCapable returns true for MIME types that commonly contain EXIF data.
-func isExifCapable(mime string) bool {
+// IsExifCapable returns true for MIME types that commonly contain EXIF data.
+func IsExifCapable(mime string) bool {
 	switch {
 	case strings.HasPrefix(mime, "image/jpeg"),
 		strings.HasPrefix(mime, "image/tiff"),
